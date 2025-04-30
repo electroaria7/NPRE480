@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>GESP Interactive Map - Full Detailed Info</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet/dist/leaflet.css"
+  />
+  <style>
+    html, body { margin: 0; height: 100%; }
+    #map { width: 100%; height: 100%; }
+    .leaflet-popup-content { font-family: Arial, sans-serif; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Initialize map
+    var map = L.map('map').setView([20, 0], 2);
+
+    // Add tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Country data: name, coordinates, detailed GESP info
+    var countries = [
+      {
+        name: "Australia",
+        coords: [-25.2744, 133.7751],
+        info: "<b>Australia</b><br>Energy Secure Population: 98% (2023)<br>% of Renewable Energy: 9% (2023)<br>Provisions: Iron Ore, Copper, Lithium, Nickel, Uranium<br>Highest Potential For: Solar & Wind"
+      },
+      {
+        name: "South Africa",
+        coords: [-30.5595, 22.9375],
+        info: "<b>South Africa</b><br>Energy Secure Population: 84.4% (2022)<br>% of Renewable Energy: 8.4% (2022)<br>Provisions: Iron, Copper, Chromium, Vanadium, Gold, Manganese, Cobalt, Nickel<br>Highest Potential For: Wind & Solar"
+      },
+      {
+        name: "China",
+        coords: [35.8617, 104.1954],
+        info: "<b>China</b><br>Energy Secure Population: 100% (2023)<br>% of Renewable Energy: 24.2% (2022)<br>Provisions: Iron, Copper, Lithium, Nickel, Rare Earth Elements<br>Highest Potential For: Wind & Solar"
+      },
+      {
+        name: "Brazil",
+        coords: [-14.2350, -51.9253],
+        info: "<b>Brazil</b><br>Energy Secure Population: 99.8% (2022)<br>% of Renewable Energy: 49.1% (2023)<br>Provisions: Iron, Copper, Lithium, Nickel, Niobium, Bauxite, Manganese<br>Highest Potential For: Solar & Wind"
+      },
+      {
+        name: "India",
+        coords: [20.5937, 78.9629],
+        info: "<b>India</b><br>Energy Secure Population: 99.2% (2022)<br>% of Renewable Energy: 22% (2023)<br>Provisions: Iron, Copper, Bauxite, Zinc, Manganese, Chromite, Rare Earth Materials<br>Highest Potential For: Solar & Wind"
+      },
+      {
+        name: "Chile",
+        coords: [-35.6751, -71.5430],
+        info: "<b>Chile</b><br>Energy Secure Population: 99.3%<br>% of Renewable Energy: 30.4%<br>Provisions: Iron, Copper, Bauxite, Zinc, Manganese, Chromite, Rare Earth Materials<br>Highest Potential For: Solar & Wind"
+      },
+      {
+        name: "Zambia",
+        coords: [-13.1339, 27.8493],
+        info: "<b>Zambia</b><br>Energy Secure Population: 53.6%<br>% of Renewable Energy: 88%<br>Provisions: Copper, Cobalt, Nickel, Manganese, Gold<br>Highest Potential For: Hydropower & Solar"
+      },
+      {
+        name: "Namibia",
+        coords: [-22.9576, 18.4904],
+        info: "<b>Namibia</b><br>Energy Secure Population: 56.3%<br>% of Renewable Energy: 39.4% (2022)<br>Provisions: Rare Earth Minerals, Uranium<br>Highest Potential For: Hydroelectricity & Biofuels"
+      },
+      {
+        name: "Mexico",
+        coords: [23.6345, -102.5528],
+        info: "<b>Mexico</b><br>Energy Secure Population: 99.4%<br>% of Renewable Energy: 23% (2022)<br>Provisions: Iron, Copper, Silica, Lead, Titanium Dioxide<br>Highest Potential For: Wind, Solar & Biofuels"
+      },
+      {
+        name: "Germany",
+        coords: [51.1657, 10.4515],
+        info: "<b>Germany</b><br>Energy Secure Population: 100%<br>% of Renewable Energy: 39.4% (2022)<br>Provisions: Wind Turbines, Green Investments<br>JETP agreement with South Africa; partnership with Jordan for renewables.<br>Highest Potential For: Wind & Solar"
+      },
+      {
+        name: "Italy",
+        coords: [41.8719, 12.5674],
+        info: "<b>Italy</b><br>Energy Secure Population: 100%<br>% of Renewable Energy: 34.3% (2022)<br>Provisions: Green Investments<br>Tripartite agreements with Albania & UAE; partnership with Kenya for green hydrogen.<br>Highest Potential For: Hydroelectricity & Biofuels"
+      },
+      {
+        name: "United Kingdom",
+        coords: [55.3781, -3.4360],
+        info: "<b>United Kingdom</b><br>Energy Secure Population: 100%<br>% of Renewable Energy: 40.1% (2022)<br>Provisions: Green Investments<br>UK pact with 18 countries for green projects (£89M across 72 projects).<br>Highest Potential For: Wind & Biofuel"
+      },
+      {
+        name: "Morocco",
+        coords: [31.7917, -7.0926],
+        info: "<b>Morocco</b><br>Energy Secure Population: 100%<br>% of Renewable Energy: 16.9% (2022)<br>Provisions: Green Investments<br>Tripartite green agreements; partnerships for hydrogen & biofuels.<br>Highest Potential For: Hydroelectricity & Biofuels"
+      },
+      {
+        name: "Kenya",
+        coords: [0.0236, 37.9062],
+        info: "<b>Kenya</b><br>Energy Secure Population: 71.4%<br>% of Renewable Energy: 87.7% (2022)<br>Provisions: Green Investments<br>$70M to World Bank’s Locally-Led Climate Action.<br>Highest Potential For: Geothermal, Hydroelectricity, Solar & Biofuels"
+      },
+      {
+        name: "Jordan",
+        coords: [30.5852, 36.2384],
+        info: "<b>Jordan</b><br>Energy Secure Population: 73.3%<br>% of Renewable Energy: 23.1% (2022)<br>Provisions: Calcium Phosphate, Green Hydrogen<br>Cement for wind turbines; goal to be regional green hydrogen provider.<br>Highest Potential For: Solar, Wind & Green Hydrogen"
+      },
+      {
+        name: "Yemen",
+        coords: [15.5527, 48.5164],
+        info: "<b>Yemen</b><br>Energy Secure Population: 99.9%<br>% of Renewable Energy: 87.7% (2022)<br>Provisions: Green Investments<br>$70M to World Bank climate action project.<br>Highest Potential For: Geothermal, Hydroelectricity, Solar & Biofuels"
+      }
+    ];
+
+    // Add markers with hover style change and popups
+    countries.forEach(function(c) {
+      var marker = L.circleMarker(c.coords, {
+        radius: 6,
+        fillColor: "#2A93D5",
+        color: "#2A93D5",
+        weight: 1,
+        fillOpacity: 0.8
+      }).addTo(map);
+
+      marker.bindPopup(c.info, { maxWidth: 200 });
+
+      marker.on('mouseover', function(e) {
+        this.setStyle({ fillColor: "#FF7800", color: "#FF7800" });
+        this.openPopup();
+      });
+      marker.on('mouseout', function(e) {
+        this.setStyle({ fillColor: "#2A93D5", color: "#2A93D5" });
+        this.closePopup();
+      });
+    });
+  </script>
+</body>
+</html>
